@@ -565,7 +565,11 @@ export class Iti {
     } = this.options;
 
     //* Containers (mostly for positioning).
-    let parentClass = "iti";
+    /* @edited: add forminator-iti-input class to the dropdown container
+		so we can style it separately only for the formnator phone input
+	*/
+    let parentClass = "forminator-iti-input iti";
+	/* end of edited */
     if (allowDropdown) {
       parentClass += " iti--allow-dropdown";
     }
@@ -697,7 +701,11 @@ export class Iti {
 
         //* Create dropdownContainer markup.
         if (dropdownContainer) {
-          let dropdownClasses = "iti iti--container";
+        /* @edited: add forminator-iti-input class to the dropdown container
+			so we can style it separately only for the formnator phone input
+		*/
+			let dropdownClasses = "forminator-iti-input iti iti--container";
+		/* end of edited */
           if (useFullscreenPopup) {
             dropdownClasses += " iti--fullscreen-popup";
           } else {
