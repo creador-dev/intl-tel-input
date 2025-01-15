@@ -43,15 +43,15 @@
         // hiddenInput: () => ({ phone: "phone_full", country: "country_code" }),
         // i18n: { 'de': 'Deutschland' },
         initialCountry: "us",
-        // loadUtils: () => import("/build/js/utils.js"), // leading slash (and http-server) required for this to work in chrome
+        loadUtils: () => import("/build/js/utils.js"), // leading slash (and http-server) required for this to work in chrome
         // nationalMode: false,
         // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
         // placeholderNumberType: "MOBILE",
         // showFlags: false,
         // separateDialCode: true,
-        // strictMode: true,
+        strictMode: true,
         // useFullscreenPopup: true,
-        // validationNumberTypes: null,
+        validationNumberTypes: null,
       });
       window.iti = iti; // useful for testing
 
@@ -79,7 +79,7 @@
         reset();
         if (!input.value.trim()) {
           showError("Required");
-        } else if (iti.isValidNumber()) {
+        } else if (iti.isValidNumberPrecise()) {
           validMsg.innerHTML = "Valid number: " + iti.getNumber();
           validMsg.classList.remove("hide");
         } else {

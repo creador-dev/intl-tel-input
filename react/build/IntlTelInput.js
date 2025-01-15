@@ -2293,15 +2293,10 @@ var Iti = class {
             const isAllowedChar = separateDialCode ? isNumeric : isInitialPlus || isNumeric;
             const newValue = value.slice(0, this.telInput.selectionStart) + e.key + value.slice(this.telInput.selectionEnd);
             const newFullNumber = this._getFullNumber(newValue);
-            const coreNumber = intlTelInput.utils.getCoreNumber(newFullNumber, this.selectedCountryData.iso2);
+            const countryCode = this.selectedCountryData.dialCode || "";
+            const coreNumber = newFullNumber.startsWith(`+${countryCode}`) ? newFullNumber.slice(countryCode.length + 1).replace(/\D/g, "") : intlTelInput.utils.getCoreNumber(newFullNumber, this.selectedCountryData.iso2);
             const hasExceededMaxLength = this.maxCoreNumberLength && coreNumber.length > this.maxCoreNumberLength;
-            let isChangingDialCode = false;
-            if (alreadyHasPlus) {
-              const currentCountry = this.selectedCountryData.iso2;
-              const newCountry = this._getCountryFromNumber(newFullNumber);
-              isChangingDialCode = newCountry !== currentCountry;
-            }
-            if (!isAllowedChar || hasExceededMaxLength && !isChangingDialCode && !isInitialPlus) {
+            if (!isAllowedChar || hasExceededMaxLength) {
               e.preventDefault();
             }
           }
