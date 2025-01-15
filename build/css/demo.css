@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+.iti {
+	display: block;
+}
+
 body {
   margin: 20px;
   font-size: 14px;
@@ -22,7 +26,7 @@ input,
 
 input {
   border: 1px solid #ccc;
-  width: 220px;
+  width: 100%;
 }
 
 input::placeholder {
@@ -69,11 +73,13 @@ input::placeholder {
     --iti-path-globe-2x: url("../img/globe_light@2x.webp");
   }
 }
-#error-msg {
+#error-msg,
+#error-msg2 {
   color: red;
 }
 
-#valid-msg {
+#valid-msg,
+#valid-msg2 {
   color: #00c900;
 }
 

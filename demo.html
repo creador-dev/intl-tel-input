@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -10,17 +10,29 @@
 
   <body>
     <h1>International Telephone Input</h1>
+	<h2>Validation: Normal</h2>
     <form>
-      <input id="phone" name="phone" type="tel" value="" />
+      <input id="phone" name="phone" type="tel" value="" class="phone-field" />
       <button class="button" id="btn" type="button">Validate</button>
       <span id="valid-msg" class="hide"></span>
       <span id="error-msg" class="hide"></span>
     </form>
 
+	<h2>Validation: Precise</h2>
+	<form>
+		<input id="phone-precise" name="phone" type="tel" value="" class="phone-field" />
+		<button class="button" id="btn2" type="button">Validate</button>
+		<span id="valid-msg2" class="hide"></span>
+		<span id="error-msg2" class="hide"></span>
+	  </form>
+
     <script src="build/js/intlTelInputWithUtils.js"></script>
     <script>
       const input = document.querySelector("#phone");
-      const iti = window.intlTelInput(input, {
+      const inputPrecise = document.querySelector("#phone-precise");
+	  const inputField = document.querySelector(".phone-field");
+
+      const iti = window.intlTelInput(inputField, {
         // allowDropdown: false,
         // autoPlaceholder: "off",
         // containerClass: "test",
@@ -58,6 +70,9 @@
       const button = document.querySelector("#btn");
       const errorMsg = document.querySelector("#error-msg");
       const validMsg = document.querySelector("#valid-msg");
+	  const button2 = document.querySelector("#btn2");
+      const errorMsg2 = document.querySelector("#error-msg2");
+      const validMsg2 = document.querySelector("#valid-msg2");
       const errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
 
       const reset = () => {
@@ -75,7 +90,7 @@
       };
 
       // on click button: validate
-      button.addEventListener('click', () => {
+      input.addEventListener('change', () => {
         reset();
         if (!input.value.trim()) {
           showError("Required");
@@ -92,6 +107,108 @@
       // on keyup / change flag: reset
       input.addEventListener('change', reset);
       input.addEventListener('keyup', reset);
+    </script>
+  </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>International Telephone Input</title>
+    <link rel="stylesheet" href="build/css/intlTelInput.css" />
+    <link rel="stylesheet" href="build/css/demo.css" />
+  </head>
+
+  <body>
+    <h1>International Telephone Input</h1>
+    <h2>Validation: Normal</h2>
+    <form>
+      <input id="phone" name="phone" type="tel" value="" class="phone-field" />
+      <span id="valid-msg" class="hide"></span>
+      <span id="error-msg" class="hide"></span>
+    </form>
+
+    <h2>Validation: Precise</h2>
+    <form>
+      <input id="phone-precise" name="phone" type="tel" value="" class="phone-field" />
+      <span id="valid-msg2" class="hide"></span>
+      <span id="error-msg2" class="hide"></span>
+    </form>
+
+    <script src="build/js/intlTelInputWithUtils.js"></script>
+    <script>
+      const input = document.querySelector("#phone");
+      const inputPrecise = document.querySelector("#phone-precise");
+
+      const itiNormal = window.intlTelInput(input, {
+        initialCountry: "us",
+        loadUtils: () => import("/build/js/utils.js"), // leading slash (and http-server) required for this to work in chrome
+        strictMode: true,
+        validationNumberTypes: null,
+      });
+
+      const itiPrecise = window.intlTelInput(inputPrecise, {
+        initialCountry: "us",
+        loadUtils: () => import("/build/js/utils.js"), // leading slash (and http-server) required for this to work in chrome
+        strictMode: true,
+        validationNumberTypes: null,
+      });
+
+      const errorMsg = document.querySelector("#error-msg");
+      const validMsg = document.querySelector("#valid-msg");
+
+      const errorMsg2 = document.querySelector("#error-msg2");
+      const validMsg2 = document.querySelector("#valid-msg2");
+
+      const errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+
+      const reset = (inputField, errorSpan, validSpan) => {
+        inputField.classList.remove("error");
+        errorSpan.innerHTML = "";
+        validSpan.innerHTML = "";
+        errorSpan.classList.add("hide");
+        validSpan.classList.add("hide");
+      };
+
+      const showError = (inputField, errorSpan, msg) => {
+        inputField.classList.add("error");
+        errorSpan.innerHTML = msg;
+        errorSpan.classList.remove("hide");
+      };
+
+      const validateNormal = () => {
+        reset(input, errorMsg, validMsg);
+        if (!input.value.trim()) {
+          showError(input, errorMsg, "Required");
+        } else if (itiNormal.isValidNumber()) {
+          validMsg.innerHTML = "Valid number: " + itiNormal.getNumber();
+          validMsg.classList.remove("hide");
+        } else {
+          const errorCode = itiNormal.getValidationError();
+          const msg = errorMap[errorCode] || "Invalid number";
+          showError(input, errorMsg, msg);
+        }
+      };
+
+      const validatePrecise = () => {
+        reset(inputPrecise, errorMsg2, validMsg2);
+        if (!inputPrecise.value.trim()) {
+          showError(inputPrecise, errorMsg2, "Required");
+        } else if (itiPrecise.isValidNumberPrecise()) {
+          validMsg2.innerHTML = "Valid number: " + itiPrecise.getNumber();
+          validMsg2.classList.remove("hide");
+        } else {
+          const errorCode = itiPrecise.getValidationError();
+          const msg = errorMap[errorCode] || "Invalid number";
+          showError(inputPrecise, errorMsg2, msg);
+        }
+      };
+
+      input.addEventListener("input", validateNormal);
+      inputPrecise.addEventListener("input", validatePrecise);
     </script>
   </body>
 </html>
