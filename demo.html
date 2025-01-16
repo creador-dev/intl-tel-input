@@ -138,10 +138,18 @@
       <span id="error-msg2" class="hide"></span>
     </form>
 
+	<h2>Seperate Dial Code (Precise Validation)</h2>
+    <form>
+      <input id="phone-seperate" name="phone" type="tel" value="" class="phone-field" />
+      <span id="valid-msg3" class="hide"></span>
+      <span id="error-msg3" class="hide"></span>
+    </form>
+
     <script src="build/js/intlTelInputWithUtils.js"></script>
     <script>
       const input = document.querySelector("#phone");
       const inputPrecise = document.querySelector("#phone-precise");
+      const inputSeperate = document.querySelector("#phone-seperate");
 
       const itiNormal = window.intlTelInput(input, {
         initialCountry: "us",
@@ -157,11 +165,22 @@
         validationNumberTypes: null,
       });
 
+	  const itiSeperateDialCode = window.intlTelInput(inputSeperate, {
+        initialCountry: "us",
+        loadUtils: () => import("/build/js/utils.js"), // leading slash (and http-server) required for this to work in chrome
+        strictMode: true,
+        validationNumberTypes: null,
+		separateDialCode: true,
+      });
+
       const errorMsg = document.querySelector("#error-msg");
       const validMsg = document.querySelector("#valid-msg");
 
       const errorMsg2 = document.querySelector("#error-msg2");
       const validMsg2 = document.querySelector("#valid-msg2");
+
+	  const errorMsg3 = document.querySelector("#error-msg3");
+      const validMsg3 = document.querySelector("#valid-msg3");
 
       const errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
 
@@ -207,8 +226,23 @@
         }
       };
 
+	  const validateSeperate = () => {
+        reset(inputSeperate, errorMsg3, validMsg3);
+        if (!inputSeperate.value.trim()) {
+          showError(inputSeperate, errorMsg3, "Required");
+        } else if (itiSeperateDialCode.isValidNumberPrecise()) {
+          validMsg3.innerHTML = "Valid number: " + itiSeperateDialCode.getNumber();
+          validMsg3.classList.remove("hide");
+        } else {
+          const errorCode = itiSeperateDialCode.getValidationError();
+          const msg = errorMap[errorCode] || "Invalid number";
+          showError(inputSeperate, errorMsg3, msg);
+        }
+      };
+
       input.addEventListener("input", validateNormal);
       inputPrecise.addEventListener("input", validatePrecise);
+      inputSeperate.addEventListener("input", validateSeperate);
     </script>
   </body>
 </html>

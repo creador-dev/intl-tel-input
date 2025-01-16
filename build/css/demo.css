@@ -74,12 +74,14 @@ input::placeholder {
   }
 }
 #error-msg,
-#error-msg2 {
+#error-msg2,
+#error-msg3 {
   color: red;
 }
 
 #valid-msg,
-#valid-msg2 {
+#valid-msg2,
+#valid-msg3 {
   color: #00c900;
 }
 
