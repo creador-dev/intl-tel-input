@@ -333,7 +333,11 @@ export class Iti {
     this.isAndroid = typeof navigator !== "undefined" ? /Android/i.test(navigator.userAgent) : false;
 
     //* Check if input has one parent with RTL.
-    this.isRTL = !!this.telInput.closest("[dir=rtl]");
+	/* @edited: add forminator-iti-input class to the dropdown container
+		so we can style it separately only for the formnator phone input
+	*/
+    // this.isRTL = !!this.telInput.closest("[dir=rtl]");
+	this.isRTL = false;
 
     const showOnDefaultSide = this.options.allowDropdown || this.options.separateDialCode;
     this.showSelectedCountryOnLeft = this.isRTL ? !showOnDefaultSide : showOnDefaultSide;
